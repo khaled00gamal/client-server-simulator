@@ -1,0 +1,15 @@
+
+server:
+while(true)
+- Listen for connections (ok)
+- Accept new connection from incoming client and delegate
+it to worker
+ thread/process (ok)
+- Parse HTTP/1.0 request and determine the command (GET or
+POST)
+- Determine if target file exists (in case of GET) and
+return error otherwise
+- Transmit contents of the file (reads from the file and
+writes on the socket) (in case of
+ GET)
+- Close the connection
