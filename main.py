@@ -1,0 +1,1 @@
+print("kolo taht saytara")
