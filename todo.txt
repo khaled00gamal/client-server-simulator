@@ -12,4 +12,4 @@ return error otherwise
 - Transmit contents of the file (reads from the file and
 writes on the socket) (in case of
  GET)
-- Close the connection
+- Close the connection (ok)
