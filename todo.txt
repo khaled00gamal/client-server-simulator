@@ -12,4 +12,16 @@ return error otherwise
 - Transmit contents of the file (reads from the file and
 writes on the socket) (in case of
  GET)
-- Close the connection
+- Close the connection (ok)
+
+
+
+client:
+while more operation exists do
+Create a TCP connection with the server
+Wait for permission from the server
+Send next requests to the server
+Receives data from the server (in case of GET) or sends
+data (in case of POST)
+Close the connection
+end while
