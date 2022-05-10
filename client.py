@@ -33,9 +33,8 @@ def create_http_requests():
         if(method == "POST"):
             body=open(filename[1:])
             request=request_parser(method,protocol,filename,host,body)
-
-        print(request)
-        requests.append(request)
+            print(request)
+            requests.append(request)
     return requests
   
 
@@ -78,4 +77,3 @@ for request in requests:
 client.close()  
 
         
-
