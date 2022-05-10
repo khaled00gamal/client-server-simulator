@@ -46,7 +46,9 @@ for request in requests:
     if split[0] == "GET":
         #recieve data from server
     else:
-        #send data to server    
+        #send data to server  
+        # 
+client.close()  
 
         
 
