@@ -25,7 +25,8 @@ class socketThread(threading.Thread):
                 response = 'HTTP/1.0 200 OK \n\n'  + data
                 self.connSocket.sendall(response.encode())
             elif method == "POST":
-                print(method)
+                response= 'HTTP/1.0 200 OK \n\n'
+                self.connSocket.sendall(response.encode())
 
         except IOError:
             response= 'HTTP/1.0 404 Not Found\n\n404 File Not Found'
