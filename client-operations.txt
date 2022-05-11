@@ -1,0 +1,5 @@
+POST /test.txt 127.0.0.1 80
+POST /hi.txt 127.0.0.1
+GET /trial.txt 127.0.0.1 80
+POST /areej.txt 127.0.0.1
+GET /trial.txt 127.0.0.1 80
