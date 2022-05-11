@@ -10,7 +10,7 @@ def compose_request(method, filename, hostname, port):
     if method == 'GET':
         request = "GET /%s HTTP/1.1\\r\\nHost:%s:%s\\r\\n\\r\\n" % (filename, hostname, port)
     else:
-        request = "POST /%s HTTP/1.1\\r\\nHost:%s:%s\\r\\n\\r\\n" % (filename, hostname, port)  # change it when you do part 3 (HTTP/1.1)
+        request = "POST /%s HTTP/1.1\\r\\nHost:%s:%s\\r\\n\\r\\n" % (filename, hostname, port)  
         file_exists = exists(filename)
         if file_exists:
             with open(filename) as file:
