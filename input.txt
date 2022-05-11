@@ -1,2 +1,0 @@
-GET /khaled.txt ip_address 80
-POST /lol.txt 192.168.56.1 80

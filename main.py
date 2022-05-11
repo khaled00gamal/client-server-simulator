@@ -1,1 +1,0 @@
-print("kolo taht saytara")
