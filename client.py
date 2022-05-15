@@ -1,5 +1,9 @@
 import socket
 from os.path import exists
+import sys
+
+
+filename=sys.argv[1] 
 
 cache = {}
 
@@ -23,7 +27,7 @@ def compose_request(method, filename, hostname, port):
     return request
 
 
-with open('client-operations.txt') as f:
+with open(filename) as f:
     operations = [operation.rstrip() for operation in f]
 index = 1
 for operation in operations:
