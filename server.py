@@ -16,18 +16,17 @@ def compose_response(request):
         if file_exists:
             with open(filename) as file:
                 data = file.read()
-            response = "%s 200 OK\\r\\n\\r\\n%s\\r\\n" % (HTTP_version, data)
+            response = "%s 200 OK\r\n\r\n%s\r\n" % (HTTP_version, data)
 
         else:
-            response = "%s 404 Not Found\\r\\n\\r\\n" % HTTP_version
+            response = "%s 404 Not Found\r\n\r\n" % HTTP_version
 
     else:
-        received_data = request.partition(r"\r\n\r\n")[2]
+        received_data = request.partition("\r\n\r\n")[2]
         fp = open("server" + filename, "w")
-        data = received_data.replace('\\r\\n', '\r\n')
-        fp.write(data)
+        fp.write(received_data)
         fp.close()
-        response = "%s 200 OK\\r\\n\\r\\n" % HTTP_version
+        response = "%s 200 OK\r\n\r\n" % HTTP_version
 
     return response
 
@@ -37,7 +36,7 @@ def client_thread(connection):
         while 1:
             try:
                 request = connection.recv(4096).decode()
-                print(request)
+
             except socket.timeout:
                 print("Connection is closed due to inactivity (TIMEOUT).")
                 print_lock.release()
@@ -48,6 +47,7 @@ def client_thread(connection):
                 print_lock.release()
                 break
 
+            print("REQUEST: " + request)
             response = compose_response(request)
             response_in_bytes = response.encode()
             connection.sendall(response_in_bytes)
@@ -63,9 +63,5 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         conn, addr = s.accept()
         print(f"Connected to {addr}.")
         print_lock.acquire()
+        conn.settimeout(5)
         start_new_thread(client_thread, (conn,))
-        print(f"ACTIVE CONNECTIONS {threading.active_count()}")
-        if threading.active_count() > 4:
-            conn.settimeout(2)
-        else:
-            conn.settimeout(5)
