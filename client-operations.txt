@@ -1,5 +1,8 @@
-POST /heyy.txt 127.0.0.1 80
-POST /hi.txt 127.0.0.1
-GET /trial.txt 127.0.0.1 80
-POST /areej.txt 127.0.0.1
-GET /trial.txt 127.0.0.1 80
+POST test2.txt 127.0.0.1 80
+GET photo1.png 127.0.0.1
+POST test2.txt 127.0.0.1
+POST photo2.png 127.0.0.1 80
+GET test1.html 127.0.0.1 80
+GET nonExistent.png 127.0.0.1
+GET photo1.png 127.0.0.1 80
+POST nonExistent.html 127.0.0.1 80
