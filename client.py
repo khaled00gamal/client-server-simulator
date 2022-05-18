@@ -1,12 +1,6 @@
 import socket
 from os.path import exists
-
-from time import sleep
-
-import sys
-
-
-filename=sys.argv[1] 
+from PIL import Image
 
 cache = {}
 index = 1
@@ -15,7 +9,7 @@ index = 1
 def compose_request(method, filename, extension, hostname, port):
     request_in_bytes = ""
     if method == 'GET':
-        request= "GET /%s HTTP/1.1\r\nHost:%s:%s\r\n\r\n" % (filename, hostname, port)
+        request = "GET /%s HTTP/1.1\r\nHost:%s:%s\r\n\r\n" % (filename, hostname, port)
         request_in_bytes = request.encode()
     else:
         request = "POST /%s HTTP/1.1\r\nHost:%s:%s\r\n\r\n" % (filename, hostname, port)
@@ -37,12 +31,15 @@ def compose_request(method, filename, extension, hostname, port):
     return request_in_bytes
 
 
-with open(filename) as f:
+with open('client-operations.txt') as f:
     operations = [operation.rstrip() for operation in f]
 
 for operation in operations:
+    if not operation:
+        break
+    print("OPERATION: " + operation)
     method = operation.split()[0]
-    filename = operation.split()[1][1:]
+    filename = operation.split()[1]
     hostname = operation.split()[2]
     extension = filename.split(".")[1]
     no_of_words = len(operation.split(' '))
@@ -74,9 +71,10 @@ for operation in operations:
                         image.show()
 
     if cached:
+        print("\n")
         continue
 
-    print("Not found in cache....\n Connecting to server")
+    print("Not found in cache. Connecting to server....")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         try:
             s.connect((hostname, port))
@@ -85,7 +83,7 @@ for operation in operations:
             cache[index] = {}
             cache[index]['Request'] = request_without_payload
             print("Request is sent.")
-            response_in_bytes = s.recv(10000000)
+            response_in_bytes = s.recv(10000000000)
             headers_response = response_in_bytes.partition(double_break_line.encode())[0]
             received_data = response_in_bytes.partition(double_break_line.encode())[2]
             response_without_payload = headers_response.decode() + double_break_line
@@ -108,6 +106,8 @@ for operation in operations:
                         print("PNG received. Displaying....")
                         image = Image.open("client" + filename)
                         image.show()
+                else:
+                    print(response_in_bytes.decode())
             else:
                 if extension == "txt" or extension == "html":
                     print(response_in_bytes.decode())
@@ -115,9 +115,10 @@ for operation in operations:
                 elif extension == "png":
                     cache[index]['Response'] = response_without_payload
                     print(response_without_payload)
+
         except ConnectionRefusedError:
             print(f"Failed to connect with server - {hostname}:{port}!")
 
+    print("\n\n\n")
     index = index + 1
 
-print(cache)
