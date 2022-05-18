@@ -8,9 +8,6 @@ print_lock = threading.Lock()  # race condition
 
 
 def compose_response(request):
-    print("\n\n")
-    print(request)
-    print("\n\n")
     response_in_bytes = ""
     double_break_line = "\r\n\r\n"
     headers = request.partition(double_break_line.encode())[0]
@@ -63,23 +60,27 @@ def compose_response(request):
     return response_in_bytes
 
 
-def client_thread(connection):
+def client_thread(connection, address):
     with connection:
+        print(f"Connected to {addr}.")
         while 1:
             try:
-                request = connection.recv(1000000)
+                request = connection.recv(10000000000)
 
             except socket.timeout:
                 print("Connection is closed due to inactivity (TIMEOUT).")
                 print_lock.release()
+                print("\n\n\n")
                 break
 
             if not request:
                 print("Connection is closed due to inactivity.")
                 print_lock.release()
+                print("\n\n\n")
                 break
 
             response = compose_response(request)
+            print("Response is sent.")
             connection.sendall(response)
 
 
@@ -87,11 +88,17 @@ HOST = "127.0.0.1"
 PORT = 80
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
-    print("Server is up. Waiting to connect...")
+    print("Server is up. Waiting to connect...\n")
+    connections_queue = []
+    addresses_queue = []
+    index = 0
     while 1:
         s.listen()
         conn, addr = s.accept()
-        print(f"Connected to {addr}.")
+        connections_queue.append(conn)
+        addresses_queue.append(addr)
         print_lock.acquire()
         conn.settimeout(5)
-        start_new_thread(client_thread, (conn,))
+        start_new_thread(client_thread, (connections_queue[index], addresses_queue[index]))
+        index = index + 1
+
